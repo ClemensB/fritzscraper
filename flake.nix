@@ -1,12 +1,10 @@
 {
   description = "AVM FRITZ!Box status scraper and Prometheus exporter";
 
-  inputs.nixpkgs.follows = "nix/nixpkgs";
-
-  outputs = { self, nix, nixpkgs }: let
+  outputs = { self, nixpkgs }: let
     pkgs = import nixpkgs {
       system = "x86_64-linux";
-      overlays = [ self.overlay nix.overlay ];
+      overlays = [ self.overlay ];
     };
   in {
     overlay = final: prev: {
