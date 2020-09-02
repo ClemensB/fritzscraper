@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 import requests
 
-from typing import Tuple
+from typing import List, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -97,3 +97,19 @@ class FritzSession:
         tx = _columns_from_first_row(pd.concat([tx_names, tx_data], axis=1).T.dropna())
 
         return rx, tx
+
+    def docsis_info_new(self) -> Tuple[List[dict], List[dict]]:
+        logger.info(f'Retrieving DOCSIS info')
+
+        resp = self._try_post(f'http://{self._host}/data.lua',
+                              data={'sid': self._sid, 'xhr': 1, 'page': 'docInfo'})
+        resp.raise_for_status()
+
+        data = resp.json()['data']
+
+        def ungroup_channels(channel_dict: dict):
+            for channel_type, channels in channel_dict.items():
+                for channel in channels:
+                    yield {**channel, 'type': channel_type}
+
+        return list(ungroup_channels(data['channelDs'])), list(ungroup_channels(data['channelUs']))

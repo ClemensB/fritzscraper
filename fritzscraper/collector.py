@@ -31,36 +31,40 @@ class FRITZBoxCollector:
                                                            labels=['direction', 'index'])
 
         # Handle 403 here
-        rx, tx = self._session.docsis_info()
+        rx, tx = self._session.docsis_info_new()
 
-        for rx_channel_idx, rx_channel in rx.iterrows():
-            rx_channel_id = rx_channel[0]
-            rx_channel_carrier = rx_channel[1]  # MHz
+        for rx_channel in rx:
+            rx_channel_idx = rx_channel['channel']
+            rx_channel_id = rx_channel['channelID']
+            rx_channel_carrier = rx_channel['frequency']  # MHz
             # rx_channel_modulation = rx_channel[2]
-            rx_channel_power_level = rx_channel[3]  # dBmV
-            rx_channel_mse = rx_channel[4]  # dB
-            rx_channel_latency = rx_channel[5]  # ms
-            rx_channel_correctable_errors = rx_channel[6]
-            rx_channel_uncorrectable_errors = rx_channel[7]
+            rx_channel_power_level = rx_channel['powerLevel']  # dBmV
+            rx_channel_mse = rx_channel['mse']  # dB
+            rx_channel_latency = rx_channel['latency']  # ms
+            rx_channel_correctable_errors = rx_channel['corrErrors']
+            rx_channel_uncorrectable_errors = rx_channel['nonCorrErrors']
 
-            channel_id.add_metric(['rx', rx_channel_idx], int(rx_channel_id))
-            channel_carrier.add_metric(['rx', rx_channel_idx], float(rx_channel_carrier))
-            channel_power_level.add_metric(['rx', rx_channel_idx], float(rx_channel_power_level))
-            channel_mse.add_metric(['rx', rx_channel_idx], float(rx_channel_mse))
-            channel_latency.add_metric(['rx', rx_channel_idx], float(rx_channel_latency))
-            channel_correctable_errors.add_metric(['rx', rx_channel_idx], int(rx_channel_correctable_errors))
-            channel_uncorrectable_errors.add_metric(['rx', rx_channel_idx], int(rx_channel_uncorrectable_errors))
+            labels = ['rx', str(rx_channel_idx)]
+            channel_id.add_metric(labels, int(rx_channel_id))
+            channel_carrier.add_metric(labels, float(rx_channel_carrier))
+            channel_power_level.add_metric(labels, float(rx_channel_power_level))
+            channel_mse.add_metric(labels, float(rx_channel_mse))
+            channel_latency.add_metric(labels, float(rx_channel_latency))
+            channel_correctable_errors.add_metric(labels, int(rx_channel_correctable_errors))
+            channel_uncorrectable_errors.add_metric(labels, int(rx_channel_uncorrectable_errors))
 
-        for tx_channel_idx, tx_channel in tx.iterrows():
-            tx_channel_id = tx_channel[0]
-            tx_channel_carrier = tx_channel[1]  # MHz
+        for tx_channel in tx:
+            tx_channel_idx = tx_channel['channel']
+            tx_channel_id = tx_channel['channelID']
+            tx_channel_carrier = tx_channel['frequency']  # MHz
             # tx_channel_modulation = tx_channel[2]
             # tx_channel_multiplexing_scheme = tx_channel[3]
-            tx_channel_power_level = tx_channel[4]  # dBmV
+            tx_channel_power_level = tx_channel['powerLevel']  # dBmV
 
-            channel_id.add_metric(['tx', tx_channel_idx], int(tx_channel_id))
-            channel_carrier.add_metric(['tx', tx_channel_idx], float(tx_channel_carrier))
-            channel_power_level.add_metric(['tx', tx_channel_idx], float(tx_channel_power_level))
+            labels = ['tx', str(tx_channel_idx)]
+            channel_id.add_metric(labels, int(tx_channel_id))
+            channel_carrier.add_metric(labels, float(tx_channel_carrier))
+            channel_power_level.add_metric(labels, float(tx_channel_power_level))
 
         yield channel_id
         yield channel_carrier
