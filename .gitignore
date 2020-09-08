@@ -213,3 +213,6 @@ fabric.properties
 
 # Nix
 /result
+
+# Direnv
+/.direnv

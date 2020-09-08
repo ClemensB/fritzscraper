@@ -8,17 +8,9 @@
     };
   in {
     overlay = final: prev: {
-      prometheus-fritzscraper-exporter = final.python3Packages.buildPythonApplication {
-        pname = "fritzscraper";
-        version = "0.0.1";
-
-        src = ./.;
-
-        propagatedBuildInputs = with final.python3Packages; [
-          pandas
-          prometheus_client
-          requests
-        ];
+      prometheus-fritzscraper-exporter = final.poetry2nix.mkPoetryApplication {
+        projectDir = ./.;
+        shellHook = " "; # The pipShellHook causes problems without a setup.py
       };
     };
 
@@ -33,7 +25,7 @@
         listenPort = mkOption {
           type = types.int;
           default = 8140;
-          description = "Port that the FRITZ!Scraper Promtheus exporter listens on";
+          description = "Port that the FRITZ!Scraper Prometheus exporter listens on";
         };
 
         gatewayAddress = mkOption {

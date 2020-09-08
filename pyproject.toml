@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "fritzscraper"
+version = "0.1.0"
+description = "AVM FRITZ!Box status scraper and Prometheus exporter"
+authors = ["Clemens Boos <clemensboos@gmail.com>"]
+license = "LGPL-3.0-only"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pandas = "^1.1.1"
+prometheus_client = "^0.8.0"
+requests = "^2.24.0"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+prometheus-fritzscraper-exporter = "fritzscraper.exporter:main"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
