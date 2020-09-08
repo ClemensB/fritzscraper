@@ -11,6 +11,7 @@
       prometheus-fritzscraper-exporter = final.poetry2nix.mkPoetryApplication {
         projectDir = ./.;
         shellHook = " "; # The pipShellHook causes problems without a setup.py
+        python = final.python38;
       };
     };
 
