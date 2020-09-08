@@ -41,7 +41,7 @@ in {
 
   config = mkIf cfg.enable {
     systemd.services."prometheus-fritzscraper-exporter" = let
-      myPkgs = pkgs.appendOverlays [ flake.overlay ];
+      inherit (flake.packages.${system}) prometheus-fritzscraper-exporter;
     in {
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
@@ -50,7 +50,7 @@ in {
       serviceConfig.WorkingDirectory = mkDefault "/tmp";
 
       serviceConfig.ExecStart = ''
-        ${myPkgs.prometheus-fritzscraper-exporter}/bin/prometheus-fritzscraper-exporter \
+        ${prometheus-fritzscraper-exporter}/bin/prometheus-fritzscraper-exporter \
           ${toString cfg.listenPort} ${cfg.gatewayAddress} ${cfg.username} ${cfg.password}
       '';
     };
