@@ -3,7 +3,6 @@ import hashlib
 import logging
 import xml.etree.ElementTree as ET
 
-import pandas as pd
 import requests
 
 from typing import List, Tuple
@@ -13,13 +12,6 @@ logger = logging.getLogger(__name__)
 
 class AuthenticationError(RuntimeError):
     pass
-
-
-def _columns_from_first_row(df: pd.DataFrame) -> pd.DataFrame:
-    df_header = df.iloc[0]
-    df = df[1:]
-    df.columns = df_header
-    return df
 
 
 class FritzSession:
@@ -84,21 +76,7 @@ class FritzSession:
 
         self._sid = sid
 
-    def docsis_info(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
-        logger.info(f'Retrieving DOCSIS info')
-
-        resp = self._try_get(f'http://{self._host}/internet/docsis_info.lua',
-                             params={'sid': self._sid, 'xhr': 1, 'update': 'uiInfo'})
-        resp.raise_for_status()
-
-        rx_names, rx_data, tx_names, tx_data = pd.read_html(resp.text)
-
-        rx = _columns_from_first_row(pd.concat([rx_names, rx_data], axis=1).T.dropna())
-        tx = _columns_from_first_row(pd.concat([tx_names, tx_data], axis=1).T.dropna())
-
-        return rx, tx
-
-    def docsis_info_new(self) -> Tuple[List[dict], List[dict]]:
+    def docsis_info(self) -> Tuple[List[dict], List[dict]]:
         logger.info(f'Retrieving DOCSIS info')
 
         resp = self._try_post(f'http://{self._host}/data.lua',

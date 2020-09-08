@@ -31,7 +31,7 @@ class FRITZBoxCollector:
                                                            labels=['direction', 'index'])
 
         # Handle 403 here
-        rx, tx = self._session.docsis_info_new()
+        rx, tx = self._session.docsis_info()
 
         for rx_channel in rx:
             rx_channel_idx = rx_channel['channel']
