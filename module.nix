@@ -1,4 +1,4 @@
-flake: { config, pkgs, lib, ... }:
+flake: { config, pkgs, lib, system, ... }:
 
 with lib;
 
