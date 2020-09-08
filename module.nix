@@ -1,8 +1,10 @@
-flake: { config, pkgs, lib, system, ... }:
+flake: { config, pkgs, lib, ... }:
 
 with lib;
 
 let
+  inherit (pkgs) system;
+
   cfg = config.services.prometheus-fritzscraper-exporter;
 in {
   options.services.prometheus-fritzscraper-exporter =  {
