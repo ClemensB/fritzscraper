@@ -3,7 +3,7 @@ name = "fritzscraper"
 version = "0.1.0"
 description = "AVM FRITZ!Box status scraper and Prometheus exporter"
 authors = ["Clemens Boos <clemensboos@gmail.com>"]
-license = "LGPL-3.0-only"
+license = "AGPL-3.0-or-later"
 
 [tool.poetry.dependencies]
 python = "^3.8"
