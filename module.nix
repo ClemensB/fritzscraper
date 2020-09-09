@@ -43,6 +43,7 @@ in {
 
   config = mkIf cfg.enable {
     systemd.services."prometheus-fritzscraper-exporter" = let
+      # Use package from flake input due to incompatibility with older nixpkgs in NixOS
       pkg = flake.defaultPackage."${system}";
     in {
       wantedBy = [ "multi-user.target" ];
